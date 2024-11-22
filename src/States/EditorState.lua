@@ -123,11 +123,21 @@ function EditorState:draw()
             switch(o.hitbox.type, {
                 ["solid"] = function()
                     if Editor.flags.showHitbox then
-                        love.graphics.rectangle()
+                        love.graphics.setColor(0, 0, 1, 0.6)
+                        love.graphics.rectangle("fill", o.hitbox.x, o.hitbox.y, o.hitbox.w, o.hitbox.h)
+                        love.graphics.setColor(0, 0, 1, 1)
+                        love.graphics.rectangle("line", o.hitbox.x, o.hitbox.y, o.hitbox.w, o.hitbox.h)
+                        love.graphics.setColor(1, 1, 1, 1)
                     end
                 end,
                 ["hazard"] = function()
-                    
+                    if Editor.flags.showHitbox then
+                        love.graphics.setColor(1, 0, 0, 0.6)
+                        love.graphics.rectangle("fill", o.hitbox.x, o.hitbox.y, o.hitbox.w, o.hitbox.h)
+                        love.graphics.setColor(1, 0, 0, 1)
+                        love.graphics.rectangle("line", o.hitbox.x, o.hitbox.y, o.hitbox.w, o.hitbox.h)
+                        love.graphics.setColor(1, 1, 1, 1)
+                    end
                 end
             })
         end

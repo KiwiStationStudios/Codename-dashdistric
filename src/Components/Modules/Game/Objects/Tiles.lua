@@ -6,7 +6,7 @@ return function(id, x, y, angle, collision)
     o.id = id or 1
     o.type = "tile"
     o.collision = collision or true
-    o.hitbox = _hitbox("solid", 0, 0, 64, 64)
+    o.hitbox = _hitbox("solid", x, y, 16, 16, 32, 32)
     o.meta = {
         alpha = 0,
         color = "obj",

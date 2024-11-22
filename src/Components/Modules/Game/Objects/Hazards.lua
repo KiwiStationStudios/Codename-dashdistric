@@ -8,10 +8,10 @@ return function(id, x, y, angle, collision)
     o.collision = collision or true
     switch(id, {
         [2] = function()
-            o.hitbox = _hitbox("hazard", 24, 42, 16, 16)
+            o.hitbox = _hitbox("hazard", x, y, 4, -2, 8, 8)
         end,
         ["default"] = function()
-            o.hitbox = _hitbox("hazard", 24, 24, 16, 32)
+            o.hitbox = _hitbox("hazard", x, y, 4, 8, 8, 16)
         end
     })
     o.meta = {

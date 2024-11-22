@@ -1,9 +1,9 @@
-return function(type, offsetX, offsetY, w, h)
+return function(type, x, y, offsetX, offsetY, w, h)
     return {
-        offsetX = offsetX or 0,
-        offsetY = offsetY or 0,
         w = w,
         h = h,
+        x = x - offsetX,
+        y = y - offsetY,
         type = type
     }
 end
