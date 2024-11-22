@@ -4,6 +4,7 @@ return function()
     utf8 = require 'utf8'
     loveframes = require 'libraries.loveframes'
     moonshine = require 'libraries.moonshine'
+    lovedownloader = require 'libraries.lovedownloader'
     slab = require 'libraries.slab'
     class = require 'libraries.classic'
     camera = require 'libraries.camera'

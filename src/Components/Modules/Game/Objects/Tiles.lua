@@ -1,17 +1,15 @@
 local _hitbox = require 'src.Components.Modules.Game.Objects.Hitbox'
+local _object = require 'src.Components.Modules.Game.Objects.Object'
 
 return function(id, x, y, angle, collision)
-    return {
-        type = "tile",
-        id = id or 1,
-        x = x,
-        y = y,
-        angle = angle or 0,
-        collision = collision or true,
-        hitbox = _hitbox("solid", 0, 0, 64, 64),
-        meta = {
-            alpha = 0,
-            color = 1,
-        }
+    local o = _object(x, y, angle)
+    o.id = id or 1
+    o.type = "tile"
+    o.collision = collision or true
+    o.hitbox = _hitbox("solid", 0, 0, 64, 64)
+    o.meta = {
+        alpha = 0,
+        color = "obj",
     }
+    return o
 end

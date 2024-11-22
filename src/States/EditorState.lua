@@ -119,6 +119,17 @@ function EditorState:draw()
                     )
                 end,
             })
+            
+            switch(o.hitbox.type, {
+                ["solid"] = function()
+                    if Editor.flags.showHitbox then
+                        love.graphics.rectangle()
+                    end
+                end,
+                ["hazard"] = function()
+                    
+                end
+            })
         end
 
         love.graphics.setLineWidth(2)
@@ -221,6 +232,9 @@ function EditorState:keypressed(k)
     end
     if k == "e" then
         Editor.data.angle = Editor.data.angle + 90
+    end
+    if k == "t" then
+        Editor.flags.swipeMode = not Editor.flags.swipeMode
     end
 end
 

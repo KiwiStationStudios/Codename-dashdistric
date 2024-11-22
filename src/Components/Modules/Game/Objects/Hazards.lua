@@ -1,24 +1,22 @@
 local _hitbox = require 'src.Components.Modules.Game.Objects.Hitbox'
+local _object = require 'src.Components.Modules.Game.Objects.Object'
 
 return function(id, x, y, angle, collision)
-    local h = {
-        type = "hazard",
-        id = id or 1,
-        x = x,
-        y = y,
-        angle = angle or 0,
-        collision = collision or true,
-        hitbox = nil
-    }
-
+    local o = _object(x, y, angle)
+    o.id = id or 1
+    o.type = "hazard"
+    o.collision = collision or true
     switch(id, {
         [2] = function()
-            h.hitbox = _hitbox("hazard", 24, 42, 16, 16)
+            o.hitbox = _hitbox("hazard", 24, 42, 16, 16)
         end,
         ["default"] = function()
-            h.hitbox = _hitbox("hazard", 24, 24, 16, 32)
+            o.hitbox = _hitbox("hazard", 24, 24, 16, 32)
         end
     })
-
-    return h
+    o.meta = {
+        alpha = 0,
+        color = "obj",
+    }
+    return o
 end
