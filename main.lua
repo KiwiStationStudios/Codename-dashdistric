@@ -51,7 +51,9 @@ function love.initialize(args)
                 colorChannelColorPicker = false,
                 colorChannelCreateCurrentColor = {1, 1, 1, 1},
                 editColorChannelPicker = false,
-                currentKey = 0
+                currentKey = 0,
+                currentSelectedLevelID = 0,
+                saveName = ""
             }
         }
     }
@@ -75,6 +77,11 @@ function love.initialize(args)
     if DEBUG_APP then
         love.filesystem.createDirectory("screenshots")
     end
+
+    love.filesystem.createDirectory("user")
+    love.filesystem.createDirectory("user/editor")
+    love.filesystem.createDirectory("user/saved")
+    love.filesystem.createDirectory("user/songs")
 
     gamestate.registerEvents()
     gamestate.switch(EditorState)

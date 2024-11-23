@@ -13,7 +13,7 @@ return function(levelname)
                     y = 0.5
                 },
                 bgOffsetX = 0,
-                bgOffsetY = 128
+                bgOffsetY = 256
             }
         },
         level = {

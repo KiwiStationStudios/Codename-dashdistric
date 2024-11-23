@@ -11,7 +11,7 @@ return function()
                 if Editor.data.levelPath == "" then
                     registers.system.editor.fileDialogSave = true
                 else
-                    nativefs.write(Editor.data.levelPath, love.data.compress("string", "zlib", json.encode(editorLevelData)))
+                    love.filesystem.write(Editor.data.levelPath, love.data.compress("string", "zlib", json.encode(editorLevelData)))
                 end
             end
             if slab.MenuItem("Save and test") then
