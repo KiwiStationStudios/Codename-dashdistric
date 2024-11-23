@@ -5,10 +5,14 @@ return function()
                 
             end
             if slab.MenuItem("Open level") then
-                
+                registers.system.editor.fileDialogOpen = true
             end
             if slab.MenuItem("Save level") then
-                
+                if Editor.data.levelPath == "" then
+                    registers.system.editor.fileDialogSave = true
+                else
+                    nativefs.write(Editor.data.levelPath, love.data.compress("string", "zlib", json.encode(editorLevelData)))
+                end
             end
             if slab.MenuItem("Save and test") then
                 

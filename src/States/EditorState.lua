@@ -50,6 +50,8 @@ function EditorState:init()
     Editor.interface.toolbox = require 'src.Components.Modules.Game.Editor.Interface.Toolkit'
     Editor.interface.menubar = require 'src.Components.Modules.Game.Editor.Interface.MenuBar'
     Editor.interface.metadataEditor = require 'src.Components.Modules.Game.Editor.Interface.MetadataEditor'
+    Editor.interface.openFileDialog = require 'src.Components.Modules.Game.Editor.Interface.OpenLevelDialog'
+    Editor.interface.saveFileDialog = require 'src.Components.Modules.Game.Editor.Interface.SaveLevelDialog'
 
     lineGround = love.graphics.newGradient("horizontal", 
         {0, 0, 0, 0}, 
@@ -86,6 +88,7 @@ function EditorState:enter()
     editorLevelData = Editor.components.createLevel()
 
     Editor.data.objects = {}
+    Editor.data.levelPath = ""
     Editor.data.canEdit = false
     Editor.data.objType = "none"
     Editor.data.currentEditorMode = "append"
@@ -280,6 +283,8 @@ function EditorState:update(elapsed)
     Editor.interface.toolbox()
     Editor.interface.menubar()
     Editor.interface.metadataEditor()
+    Editor.interface.saveFileDialog()
+    Editor.interface.openFileDialog()
 end
 
 function EditorState:mousepressed(x, y, button)
