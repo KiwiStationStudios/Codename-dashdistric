@@ -14,7 +14,7 @@ return function(levelname)
             groundY = 0,
             colorChannels = {
                 ["bg"] = {60, 205, 168},
-                ["objs"] = {255, 255, 255},
+                ["obj"] = {255, 255, 255},
                 ["black"] = {0, 0, 0},
                 ["finalObj"] = {191, 113, 216}
             },

@@ -84,6 +84,17 @@ function EditorState:enter()
     Editor.data.currentEditorMode = "append"
     Editor.data.objID = 1
     Editor.data.angle = 0
+    Editor.data.selectionArea = {
+        mode = "build",
+        visible = false,
+        x = 0,
+        y = 0,
+        w = 0,
+        h = 0,
+        normalizedW = 0,
+        normalizedH = 0,
+        storedObjectsIndexes = {}
+    }
 
     Editor.data.mouse = {
         x = 0,
@@ -96,6 +107,9 @@ function EditorState:draw()
 
     Editor.camera:attach()
         for _, o in pairs(editorLevelData.objects) do
+            if o.meta.selected then
+                love.graphics.setColor(0, 1, 0, 1)
+            end
             switch(o.type, {
                 ["tile"] = function()
                     local qx, qy, qw, qh = Assets[o.type].quads[o.id]:getViewport()
@@ -119,6 +133,7 @@ function EditorState:draw()
                     )
                 end,
             })
+            love.graphics.setColor(1, 1, 1, 1)
             
             switch(o.hitbox.type, {
                 ["solid"] = function()
@@ -140,6 +155,24 @@ function EditorState:draw()
                     end
                 end
             })
+        end
+
+        if Editor.data.selectionArea.visible then
+            if Editor.data.selectionArea.mode == "build" then
+                love.graphics.setColor(0, 1, 0, 0.4)
+            elseif Editor.data.selectionArea.mode == "erase" then
+                love.graphics.setColor(1, 0, 0, 0.4)
+            end
+            love.graphics.rectangle("fill", Editor.data.selectionArea.x, Editor.data.selectionArea.y, Editor.data.selectionArea.w, Editor.data.selectionArea.h)
+            if Editor.data.selectionArea.mode == "build" then
+                love.graphics.setColor(0, 1, 0, 1)
+            elseif Editor.data.selectionArea.mode == "erase" then
+                love.graphics.setColor(1, 0, 0, 1)
+            end
+            love.graphics.setLineWidth(3)
+                love.graphics.rectangle("line", Editor.data.selectionArea.x, Editor.data.selectionArea.y, Editor.data.selectionArea.w, Editor.data.selectionArea.h)
+            love.graphics.setLineWidth(1)
+            love.graphics.setColor(1, 1, 1, 1)
         end
 
         love.graphics.setLineWidth(2)
@@ -185,8 +218,10 @@ function EditorState:update(elapsed)
     local mx, my = Editor.camera:mousePosition()
     Editor.data.mouse.x, Editor.data.mouse.y = math.floor(mx / 32) * 32, math.floor(my / 32) * 32
 
-    if Editor.data.canEdit and Editor.data.objType ~= "none" and Editor.data.currentEditorMode == "append" then
-        if Editor.flags.swipeMode then
+    Editor.data.selectionArea.visible = love.mouse.isDown(1)
+
+    if Editor.flags.swipeMode then
+        if Editor.data.canEdit and Editor.data.objType ~= "none" and Editor.data.currentEditorMode == "append" then
             if love.mouse.isDown(1) then
 
                 if not isHover(Editor.data.mouse.x + 16, Editor.data.mouse.y + 16) then
@@ -219,8 +254,8 @@ function EditorState:update(elapsed)
 end
 
 function EditorState:mousepressed(x, y, button)
-    if Editor.data.canEdit and Editor.data.objType ~= "none" and Editor.data.currentEditorMode == "append" then
-        if not Editor.flags.swipeMode then
+    if not Editor.flags.swipeMode then
+        if Editor.data.canEdit and Editor.data.objType ~= "none" and Editor.data.currentEditorMode == "append" then
             if button == 1 then
                 if not isHover(Editor.data.mouse.x + 16, Editor.data.mouse.y + 16) then
                     if Editor.objects[Editor.data.objType] then
@@ -234,6 +269,32 @@ function EditorState:mousepressed(x, y, button)
             end
         end
     end
+
+    if Editor.data.canEdit and Editor.data.currentEditorMode == "edit" then
+        Editor.data.selectionArea.x = math.floor(Editor.data.mouse.x / 32) * 32
+        Editor.data.selectionArea.y = math.floor(Editor.data.mouse.y / 32) * 32
+    end
+end
+
+function EditorState:mousereleased(x, y, button)
+    -- clear --
+    for _, o in pairs(editorLevelData.objects) do
+        o.meta.selected = false
+    end
+    -- store all selected objects --
+    for _, o in ipairs(editorLevelData.objects) do
+        if collision.rectRect(Editor.data.selectionArea, o.hitbox) then
+            o.meta.selected = true
+        end
+    end
+
+    -- reset --
+    Editor.data.selectionArea.x = 0
+    Editor.data.selectionArea.y = 0
+    Editor.data.selectionArea.w = 0
+    Editor.data.selectionArea.h = 0
+    Editor.data.selectionArea.normalizedW = 0
+    Editor.data.selectionArea.normalizedH = 0
 end
 
 function EditorState:keypressed(k)
@@ -246,6 +307,16 @@ function EditorState:keypressed(k)
     if k == "t" then
         Editor.flags.swipeMode = not Editor.flags.swipeMode
     end
+    if k == "delete" then
+        if Editor.data.currentEditorMode == "edit" then
+            for i = #editorLevelData.objects, 1, -1 do
+                local o = editorLevelData.objects[i]
+                if o and o.meta.selected then
+                    table.remove(editorLevelData.objects, i)
+                end
+            end
+        end
+    end
 end
 
 function EditorState:mousemoved(x, y, dx, dy)
@@ -253,6 +324,15 @@ function EditorState:mousemoved(x, y, dx, dy)
     if love.mouse.isDown(3) then
         Editor.camera.x = Editor.camera.x - dx / Editor.camera.scale
         Editor.camera.y = Editor.camera.y - dy / Editor.camera.scale
+    end
+
+    if Editor.data.currentEditorMode == "edit" then
+        if love.mouse.isDown(1) then
+            Editor.data.selectionArea.normalizedW = (Editor.data.selectionArea.normalizedW + dx)
+            Editor.data.selectionArea.normalizedH = (Editor.data.selectionArea.normalizedH + dy)
+            Editor.data.selectionArea.w = math.floor((Editor.data.selectionArea.normalizedW + 32) / 32) * 32
+            Editor.data.selectionArea.h = math.floor((Editor.data.selectionArea.normalizedH + 32) / 32) * 32
+        end
     end
 end
 

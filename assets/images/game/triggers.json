@@ -1,7 +1,6 @@
 {
-  "frames": [
-    {
-      "filename": "cameraTrigger.png",
+  "frames": {
+    "fadePlayerHide.png": {
       "frame": {
         "x": 0,
         "y": 0,
@@ -25,8 +24,7 @@
         "y": 0.5
       }
     },
-    {
-      "filename": "checkpointTrigger.png",
+    "cameraTrigger.png": {
       "frame": {
         "x": 32,
         "y": 0,
@@ -50,8 +48,7 @@
         "y": 0.5
       }
     },
-    {
-      "filename": "colorTrigger.png",
+    "colorTrigger.png": {
       "frame": {
         "x": 0,
         "y": 32,
@@ -75,8 +72,7 @@
         "y": 0.5
       }
     },
-    {
-      "filename": "eventtrigger.png",
+    "endTrigger.png": {
       "frame": {
         "x": 32,
         "y": 32,
@@ -100,8 +96,7 @@
         "y": 0.5
       }
     },
-    {
-      "filename": "fadePlayerHide.png",
+    "eventtrigger.png": {
       "frame": {
         "x": 64,
         "y": 0,
@@ -125,8 +120,7 @@
         "y": 0.5
       }
     },
-    {
-      "filename": "fadePlayerShow.png",
+    "checkpointTrigger.png": {
       "frame": {
         "x": 64,
         "y": 32,
@@ -150,8 +144,7 @@
         "y": 0.5
       }
     },
-    {
-      "filename": "fadeTrigger.png",
+    "fadePlayerShow.png": {
       "frame": {
         "x": 0,
         "y": 64,
@@ -175,8 +168,7 @@
         "y": 0.5
       }
     },
-    {
-      "filename": "moveTrigger.png",
+    "fadeTrigger.png": {
       "frame": {
         "x": 32,
         "y": 64,
@@ -200,11 +192,58 @@
         "y": 0.5
       }
     },
-    {
-      "filename": "scaleTrigger.png",
+    "moveTrigger.png": {
       "frame": {
         "x": 64,
         "y": 64,
+        "w": 32,
+        "h": 32
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 32,
+        "h": 32
+      },
+      "sourceSize": {
+        "w": 32,
+        "h": 32
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "scaleTrigger.png": {
+      "frame": {
+        "x": 96,
+        "y": 0,
+        "w": 32,
+        "h": 32
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 32,
+        "h": 32
+      },
+      "sourceSize": {
+        "w": 32,
+        "h": 32
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "startPosTrigger.png": {
+      "frame": {
+        "x": 96,
+        "y": 32,
         "w": 32,
         "h": 32
       },
@@ -225,14 +264,14 @@
         "y": 0.5
       }
     }
-  ],
+  },
   "meta": {
     "app": "http://free-tex-packer.com",
     "version": "0.6.7",
     "image": "triggers.png",
     "format": "RGBA8888",
     "size": {
-      "w": 96,
+      "w": 128,
       "h": 96
     },
     "scale": 1
