@@ -1,6 +1,7 @@
 {
-  "frames": {
-    "fadePlayerHide.png": {
+  "frames": [
+    {
+      "filename": "fadePlayerHide.png",
       "frame": {
         "x": 0,
         "y": 0,
@@ -24,7 +25,8 @@
         "y": 0.5
       }
     },
-    "cameraTrigger.png": {
+    {
+      "filename": "cameraTrigger.png",
       "frame": {
         "x": 32,
         "y": 0,
@@ -48,7 +50,8 @@
         "y": 0.5
       }
     },
-    "colorTrigger.png": {
+    {
+      "filename": "colorTrigger.png",
       "frame": {
         "x": 0,
         "y": 32,
@@ -72,7 +75,8 @@
         "y": 0.5
       }
     },
-    "endTrigger.png": {
+    {
+      "filename": "endTrigger.png",
       "frame": {
         "x": 32,
         "y": 32,
@@ -96,7 +100,8 @@
         "y": 0.5
       }
     },
-    "eventtrigger.png": {
+    {
+      "filename": "eventtrigger.png",
       "frame": {
         "x": 64,
         "y": 0,
@@ -120,7 +125,8 @@
         "y": 0.5
       }
     },
-    "checkpointTrigger.png": {
+    {
+      "filename": "checkpointTrigger.png",
       "frame": {
         "x": 64,
         "y": 32,
@@ -144,7 +150,8 @@
         "y": 0.5
       }
     },
-    "fadePlayerShow.png": {
+    {
+      "filename": "fadePlayerShow.png",
       "frame": {
         "x": 0,
         "y": 64,
@@ -168,7 +175,8 @@
         "y": 0.5
       }
     },
-    "fadeTrigger.png": {
+    {
+      "filename": "fadeTrigger.png",
       "frame": {
         "x": 32,
         "y": 64,
@@ -192,7 +200,8 @@
         "y": 0.5
       }
     },
-    "moveTrigger.png": {
+    {
+      "filename": "moveTrigger.png",
       "frame": {
         "x": 64,
         "y": 64,
@@ -216,7 +225,8 @@
         "y": 0.5
       }
     },
-    "scaleTrigger.png": {
+    {
+      "filename": "scaleTrigger.png",
       "frame": {
         "x": 96,
         "y": 0,
@@ -240,7 +250,8 @@
         "y": 0.5
       }
     },
-    "startPosTrigger.png": {
+    {
+      "filename": "startPosTrigger.png",
       "frame": {
         "x": 96,
         "y": 32,
@@ -264,7 +275,7 @@
         "y": 0.5
       }
     }
-  },
+  ],
   "meta": {
     "app": "http://free-tex-packer.com",
     "version": "0.6.7",

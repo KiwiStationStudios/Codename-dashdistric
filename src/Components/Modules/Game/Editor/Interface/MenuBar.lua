@@ -42,7 +42,7 @@ return function()
 
         if slab.BeginMenu("Tools") then
             if slab.MenuItem("Metadata settings") then
-                
+                registers.system.editor.metaDataWindow = true
             end
             if slab.MenuItem("Show hitbox" .. (Editor.flags.showHitbox and " [ON]" or " [OFF]")) then
                 Editor.flags.showHitbox = not Editor.flags.showHitbox

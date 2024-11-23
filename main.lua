@@ -45,6 +45,13 @@ function love.initialize(args)
             editor = {
                 fileDialogOpen = false,
                 fileDialogSave = false,
+                metaDataWindow = false,
+                addNewColorChannel = false,
+                newColorChannelTag = "",
+                colorChannelColorPicker = false,
+                colorChannelCreateCurrentColor = {1, 1, 1, 1},
+                editColorChannelPicker = false,
+                currentKey = 0
             }
         }
     }

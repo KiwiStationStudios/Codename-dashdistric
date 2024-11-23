@@ -15,23 +15,25 @@ return function()
             slab.SetLayoutColumn(2)
             if Editor.data.objType == "none" then 
                 for t = 1, #types, 1 do
-                    local qx, qy, qw, qh = Assets[types[t]].quads[1]:getViewport()
-                    slab.Image("tileCatDisp" .. t, {
-                        Image = Assets[types[t]].img,
-                        SubX = qx,
-                        SubY = qy,
-                        SubW = qw,
-                        SubH = qh,
-                        W = 32,
-                        H = 32,
-                    })
-
-                    if t % 32 ~= 0 then
-                        slab.SameLine()
-                    end
-
-                    if slab.IsControlClicked() then
-                        Editor.data.objType = types[t]
+                    if Assets[types[t]] then
+                        local qx, qy, qw, qh = Assets[types[t]].quads[1]:getViewport()
+                        slab.Image("tileCatDisp" .. t, {
+                            Image = Assets[types[t]].img,
+                            SubX = qx,
+                            SubY = qy,
+                            SubW = qw,
+                            SubH = qh,
+                            W = 32,
+                            H = 32,
+                        })
+    
+                        if t % 32 ~= 0 then
+                            slab.SameLine()
+                        end
+    
+                        if slab.IsControlClicked() then
+                            Editor.data.objType = types[t]
+                        end
                     end
                 end
             else

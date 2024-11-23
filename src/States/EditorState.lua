@@ -26,6 +26,8 @@ local function isVisible(obj, camera)
     local ox, oy 
 end
 
+---------------------------------------------------------------------------------------------
+
 function EditorState:init()
     Editor = {
         components = {},
@@ -47,6 +49,7 @@ function EditorState:init()
     -- interface components --
     Editor.interface.toolbox = require 'src.Components.Modules.Game.Editor.Interface.Toolkit'
     Editor.interface.menubar = require 'src.Components.Modules.Game.Editor.Interface.MenuBar'
+    Editor.interface.metadataEditor = require 'src.Components.Modules.Game.Editor.Interface.MetadataEditor'
 
     lineGround = love.graphics.newGradient("horizontal", 
         {0, 0, 0, 0}, 
@@ -59,12 +62,18 @@ function EditorState:init()
     Assets = {
         tile = {},
         hazard = {},
-        trigger = {}
+        trigger = {},
+        bgs = {},
     }
     Assets.tile.img, Assets.tile.quads = love.graphics.getQuads("assets/images/game/blocks")
     Assets.hazard.img, Assets.hazard.quads = love.graphics.getQuads("assets/images/game/spike")
     Assets.trigger.img, Assets.trigger.quads = love.graphics.getQuads("assets/images/game/triggers")
     Assets.backbutton = love.graphics.newImage("assets/images/game/backbtn.png")
+
+    local bgs = love.filesystem.getDirectoryItems("assets/images/game/backgrounds")
+    for b = 1, #bgs, 1 do
+        table.insert(Assets.bgs, love.graphics.newImage("assets/images/game/backgrounds/" .. bgs[b]))
+    end
 
     slab.Initialize({"NoDocks"})
 end
@@ -75,8 +84,6 @@ function EditorState:enter()
     Editor.camera.scrollZoom = 1 
     Editor.camera.targetZoom = 1
     editorLevelData = Editor.components.createLevel()
-
-    print(debug.formattable(editorLevelData))
 
     Editor.data.objects = {}
     Editor.data.canEdit = false
@@ -103,12 +110,34 @@ function EditorState:enter()
 end
 
 function EditorState:draw()
+    local curBG = Assets.bgs[editorLevelData.level.bgID]
+    local bgOffsetX = Editor.camera.x * editorLevelData.meta.bgConfig.bgFactor.x + editorLevelData.meta.bgConfig.bgOffsetX
+    local bgOffsetY = Editor.camera.y * editorLevelData.meta.bgConfig.bgFactor.y + editorLevelData.meta.bgConfig.bgOffsetY
+
+    -- Calcula o início e o fim do grid de texturas que precisam ser desenhadas
+    local startX = math.floor(bgOffsetX / curBG:getWidth()) * curBG:getWidth()
+    local startY = math.floor(bgOffsetY / curBG:getHeight()) * curBG:getHeight()
+
+    local endX = startX + love.graphics.getWidth() + curBG:getWidth()
+    local endY = startY + love.graphics.getHeight() + curBG:getHeight()
+
+    for x = startX, endX, curBG:getWidth() do
+        for y = startY, endY, curBG:getHeight() do
+            local color = editorLevelData.level.colorChannels["bg"]
+            love.graphics.setColor(editorLevelData.level.colorChannels["bg"])
+                love.graphics.draw(curBG, x - bgOffsetX, y - bgOffsetY)
+            love.graphics.setColor(1, 1, 1, 1)
+        end
+    end
+
     Editor.components.grid(Editor.camera, 32)
 
     Editor.camera:attach()
         for _, o in pairs(editorLevelData.objects) do
             if o.meta.selected then
                 love.graphics.setColor(0, 1, 0, 1)
+            else
+                love.graphics.setColor(editorLevelData.level.colorChannels["obj"])
             end
             switch(o.type, {
                 ["tile"] = function()
@@ -135,43 +164,40 @@ function EditorState:draw()
             })
             love.graphics.setColor(1, 1, 1, 1)
             
-            switch(o.hitbox.type, {
-                ["solid"] = function()
-                    if Editor.flags.showHitbox then
-                        love.graphics.setColor(0, 0, 1, 0.6)
-                        love.graphics.rectangle("fill", o.hitbox.x, o.hitbox.y, o.hitbox.w, o.hitbox.h)
-                        love.graphics.setColor(0, 0, 1, 1)
-                        love.graphics.rectangle("line", o.hitbox.x, o.hitbox.y, o.hitbox.w, o.hitbox.h)
-                        love.graphics.setColor(1, 1, 1, 1)
+            if o.hitbox then
+                switch(o.hitbox.type, {
+                    ["solid"] = function()
+                        if Editor.flags.showHitbox then
+                            love.graphics.setColor(0, 0, 1, 0.6)
+                                love.graphics.rectangle("fill", o.hitbox.x, o.hitbox.y, o.hitbox.w, o.hitbox.h)
+                            love.graphics.setColor(0, 0, 1, 1)
+                                love.graphics.rectangle("line", o.hitbox.x, o.hitbox.y, o.hitbox.w, o.hitbox.h)
+                            love.graphics.setColor(1, 1, 1, 1)
+                        end
+                    end,
+                    ["hazard"] = function()
+                        if Editor.flags.showHitbox then
+                            love.graphics.setColor(1, 0, 0, 0.6)
+                                love.graphics.rectangle("fill", o.hitbox.x, o.hitbox.y, o.hitbox.w, o.hitbox.h)
+                            love.graphics.setColor(1, 0, 0, 1)
+                                love.graphics.rectangle("line", o.hitbox.x, o.hitbox.y, o.hitbox.w, o.hitbox.h)
+                            love.graphics.setColor(1, 1, 1, 1)
+                        end
                     end
-                end,
-                ["hazard"] = function()
-                    if Editor.flags.showHitbox then
-                        love.graphics.setColor(1, 0, 0, 0.6)
-                        love.graphics.rectangle("fill", o.hitbox.x, o.hitbox.y, o.hitbox.w, o.hitbox.h)
-                        love.graphics.setColor(1, 0, 0, 1)
-                        love.graphics.rectangle("line", o.hitbox.x, o.hitbox.y, o.hitbox.w, o.hitbox.h)
-                        love.graphics.setColor(1, 1, 1, 1)
-                    end
-                end
-            })
+                })
+            end
         end
 
         if Editor.data.selectionArea.visible then
-            if Editor.data.selectionArea.mode == "build" then
-                love.graphics.setColor(0, 1, 0, 0.4)
-            elseif Editor.data.selectionArea.mode == "erase" then
-                love.graphics.setColor(1, 0, 0, 0.4)
-            end
-            love.graphics.rectangle("fill", Editor.data.selectionArea.x, Editor.data.selectionArea.y, Editor.data.selectionArea.w, Editor.data.selectionArea.h)
-            if Editor.data.selectionArea.mode == "build" then
-                love.graphics.setColor(0, 1, 0, 1)
-            elseif Editor.data.selectionArea.mode == "erase" then
-                love.graphics.setColor(1, 0, 0, 1)
-            end
-            love.graphics.setLineWidth(3)
-                love.graphics.rectangle("line", Editor.data.selectionArea.x, Editor.data.selectionArea.y, Editor.data.selectionArea.w, Editor.data.selectionArea.h)
-            love.graphics.setLineWidth(1)
+
+            love.graphics.setColor(0, 1, 1, 0.4)
+                love.graphics.rectangle("fill", Editor.data.selectionArea.x, Editor.data.selectionArea.y, Editor.data.selectionArea.w, Editor.data.selectionArea.h)
+            love.graphics.setColor(1, 1, 1, 1)
+
+            love.graphics.setColor(0, 1, 1, 1)
+                love.graphics.setLineWidth(3)
+                    love.graphics.rectangle("line", Editor.data.selectionArea.x, Editor.data.selectionArea.y, Editor.data.selectionArea.w, Editor.data.selectionArea.h)
+                love.graphics.setLineWidth(1)
             love.graphics.setColor(1, 1, 1, 1)
         end
 
@@ -179,7 +205,9 @@ function EditorState:draw()
             love.graphics.rectangle("line", Editor.data.mouse.x, Editor.data.mouse.y, 32, 32)
         love.graphics.setLineWidth(1)
 
-        love.graphics.draw(lineGround, Editor.camera.x - (love.graphics.getWidth() - 128) / 2, editorLevelData.level.groundY, 0, love.graphics.getWidth() - 128, 2)
+        love.graphics.setColor(editorLevelData.level.colorChannels["ground"])
+            love.graphics.draw(lineGround, Editor.camera.x - (love.graphics.getWidth() - 128) / 2, editorLevelData.level.groundY, 0, love.graphics.getWidth() - 128, 2)
+        love.graphics.setColor(1, 1, 1, 1)
     Editor.camera:detach()
 
     switch(Editor.data.objType, {
@@ -251,6 +279,7 @@ function EditorState:update(elapsed)
 
     Editor.interface.toolbox()
     Editor.interface.menubar()
+    Editor.interface.metadataEditor()
 end
 
 function EditorState:mousepressed(x, y, button)
