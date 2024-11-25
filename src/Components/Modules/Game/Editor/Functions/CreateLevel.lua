@@ -6,7 +6,7 @@ return function(levelname)
             title = levelname or "Unnamed level",
             gameversion = 0,
             requestedDifficulty = 0, -- int range 1 -> 5
-            songid = "builtin:madness",   -- it now uses protocol parse to identify song source
+            songid = "madness",   -- it now uses protocol parse to identify song source
             bgConfig = {
                 bgFactor = {
                     x = 0.5,

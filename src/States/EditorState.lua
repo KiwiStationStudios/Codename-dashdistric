@@ -86,6 +86,12 @@ function EditorState:enter()
     Editor.camera.scrollZoom = 1 
     Editor.camera.targetZoom = 1
     editorLevelData = Editor.components.createLevel()
+    Editor.camera.visibleArea = {
+        x = 0,
+        y = 0,
+        w = love.graphics.getWidth(),
+        h = love.graphics.getHeight(),
+    }
 
     Editor.data.objects = {}
     Editor.data.levelPath = ""
@@ -248,6 +254,7 @@ function EditorState:update(elapsed)
 
     local mx, my = Editor.camera:mousePosition()
     Editor.data.mouse.x, Editor.data.mouse.y = math.floor(mx / 32) * 32, math.floor(my / 32) * 32
+    Editor.camera.visibleArea.x, Editor.camera.visibleArea.y = Editor.camera.x, Editor.camera.y
 
     Editor.data.selectionArea.visible = love.mouse.isDown(1)
 

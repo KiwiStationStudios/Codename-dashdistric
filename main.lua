@@ -53,7 +53,8 @@ function love.initialize(args)
                 editColorChannelPicker = false,
                 currentKey = 0,
                 currentSelectedLevelID = 0,
-                saveName = ""
+                saveName = "",
+                useCustomSongFlag = false,
             }
         }
     }
